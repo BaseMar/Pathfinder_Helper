@@ -9,7 +9,7 @@ from Music_Frame import Music_Frame
 config = {
     "WINDOW_TITLE": "Pathfinder Dungeon Master Helper",
     "WINDOW_WIDTH": 1100,
-    "WINDOW_HEIGHT": 600,
+    "WINDOW_HEIGHT": 800,
     "COLORS": {
         "TEXT": "#EEEEEE",
         "BUTTON": "#00ADB5",
@@ -85,4 +85,3 @@ class App(customtkinter.CTk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-    print("Test 1..2...3")

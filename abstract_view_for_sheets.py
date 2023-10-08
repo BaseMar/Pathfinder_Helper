@@ -6,17 +6,18 @@ class AbstractViewForSheets(customtkinter.CTkFrame, ABC):
     def __init__(self, parent, controller, config):
         customtkinter.CTkFrame.__init__(self, parent)
         self.config = config
+        self.name = customtkinter.StringVar(self)
         self.level_var = customtkinter.StringVar(self)
         self.experience_var = customtkinter.StringVar(self)
         self.alignment_var = customtkinter.StringVar(self)
 
     @abstractmethod
     def setup_frame(self):
-        self.label = customtkinter.CTkLabel(self, text="Nazwa postaci/potwora", text_color=self.config["COLORS"]["TEXT"])
+        self.label = customtkinter.CTkLabel(self, textvariable=self.name, text_color=self.config["COLORS"]["TEXT"])
         self.label.place(y=20, x=100)
         self.experience_label = customtkinter.CTkLabel(self, text="EXPERIENCE", text_color=self.config["COLORS"]["TEXT"])
         self.experience_label.place(y=50, x=20)
-        self.level = customtkinter.CTkLabel(self, textvariable=f"Level: {self.level_var}", text_color=self.config["COLORS"]["TEXT"])
+        self.level = customtkinter.CTkLabel(self, textvariable=self.level_var, text_color=self.config["COLORS"]["TEXT"])
         self.level.place(y=50, x=200)
         self.experience= customtkinter.CTkLabel(self, textvariable=f"{self.experience_var}", text_color=self.config["COLORS"]["TEXT"])
         self.experience.place(y=50, x=400)
