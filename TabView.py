@@ -7,4 +7,3 @@ class MyTabView(customtkinter.CTkTabview):
         self.add("Summary")
         self.add("Abilities")
         self.add("Martial")
-        self.add("Class")
