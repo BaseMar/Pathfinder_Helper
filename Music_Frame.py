@@ -212,7 +212,6 @@ class Music_Frame(customtkinter.CTkFrame):
             self.song_box.activate(previous_song_index)
             self.play_music()
         else:
-            # Obsłuż sytuację, gdy obecna piosenka nie istnieje na liście lub jest pierwszą piosenką.
             pass
 
     def next_music(self):

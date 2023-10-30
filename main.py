@@ -9,7 +9,7 @@ from Music_Frame import Music_Frame
 config = {
     "WINDOW_TITLE": "Pathfinder Dungeon Master Helper",
     "WINDOW_WIDTH": 1100,
-    "WINDOW_HEIGHT": 600,
+    "WINDOW_HEIGHT": 700,
     "COLORS": {
         "TEXT": "#EEEEEE",
         "BUTTON": "#00ADB5",
