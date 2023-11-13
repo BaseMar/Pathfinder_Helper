@@ -3,41 +3,117 @@ from Monster import Monster
 import csv
 from TabView import MyTabView
 from CTkListbox import *
-
+import re
 
 class Monster_Frame(customtkinter.CTkFrame):
     def __init__(self, parent, controller, config):
         customtkinter.CTkFrame.__init__(self, parent)
         self.monster_list = {}
         self.monster_cr_list = []
-        self.monster_environment_list = []
-
-        # Configure geometry of a Frame 4x2
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=2)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
 
         self.load_data()
 
         # Monster list box
         self.monster_list_box = CTkListbox(self, border_color=config["COLORS"]["BUTTON"],
                                            border_width=1,
-                                           width=280,
+                                           width=300,
+                                           height=600,
                                            hover_color=config["COLORS"]["HOVER"],
                                            text_color=config["COLORS"]["TEXT"],
                                            multiple_selection=False,
                                            command=self.show_monster_data)
 
         # TabView
-        self.tab_view = MyTabView(self, width=550)
-        self.tab_view.tab("Summary").grid_columnconfigure((0, 1, 2), weight=1)
-        self.tab_view.tab("Summary").grid_rowconfigure(2, weight=0)
+        self.tab_view = MyTabView(self, width=650, height=670)
+        self.tab_view.tab("Summary").grid_columnconfigure(0, weight=1)
+        self.tab_view.tab("Summary").grid_columnconfigure(1, weight=1)
+        self.tab_view.tab("Summary").grid_columnconfigure(2, weight=1)
+        self.tab_view.tab("Summary").grid_rowconfigure(2, minsize=30)
+        self.tab_view.tab("Summary").grid_rowconfigure(6, minsize=30)
+        self.tab_view.tab("Summary").grid_rowconfigure(8, minsize=30)
+
+        self.tab_view.tab("Abilities").grid_rowconfigure(1, minsize=30)
+        self.tab_view.tab("Abilities").grid_rowconfigure(3, minsize=30)
+        self.tab_view.tab("Abilities").grid_rowconfigure(5, minsize=30)
+        self.tab_view.tab("Abilities").grid_rowconfigure(7, minsize=30)
+        self.tab_view.tab("Abilities").grid_rowconfigure(9, minsize=30)
+
+        self.tab_view.tab("Martial").grid_rowconfigure(4, minsize=30)
+        self.tab_view.tab("Martial").grid_rowconfigure(8, minsize=30)
+
+            # 1 - Summary
+        self.monster_name_var = customtkinter.StringVar()
+        self.monster_name = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_name_var, font=("Impact", 25), text_color=config["COLORS"]["TEXT"])
+        self.monster_cr_var = customtkinter.StringVar()
+        self.monster_cr = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_cr_var, font=("Courier", 15), text_color=config["COLORS"]["TEXT"])
+        self.monster_xp_var = customtkinter.StringVar()
+        self.monster_xp = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_xp_var, font=("Courier", 15), text_color=config["COLORS"]["TEXT"])
+        self.monster_type_var = customtkinter.StringVar()
+        self.monster_type = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_type_var, font=("Impact", 20), text_color=config["COLORS"]["TEXT"])
+        self.monster_ability_scores_var = customtkinter.StringVar()
+        self.monster_ability_scores = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_ability_scores_var, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_ability_scores_label = customtkinter.CTkLabel(self.tab_view.tab("Summary"), text="Ability Score: ", font=("Courier", 13, "bold"), text_color=config["COLORS"]["TEXT"])
+        self.monster_skills_var = customtkinter.StringVar()
+        self.monster_skills = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_skills_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_feats_var = customtkinter.StringVar()
+        self.monster_feats = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_feats_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_languages_var = customtkinter.StringVar()
+        self.monster_languages = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_languages_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_environment_var = customtkinter.StringVar()
+        self.monster_environment = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_environment_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_organization_var = customtkinter.StringVar()
+        self.monster_organization = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_organization_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_treasure_var = customtkinter.StringVar()
+        self.monster_treasure = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_treasure_var, font=("Courier", 13), wraplength=630, text_color=config["COLORS"]["TEXT"], justify="left")
+
+            # 2 - Abilities
+        self.monster_senses_var = customtkinter.StringVar()
+        self.monster_senses = customtkinter.CTkLabel(self.tab_view.tab("Abilities"), font=("Courier", 13), wraplength=630, textvariable=self.monster_senses_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_aura_var = customtkinter.StringVar()
+        self.monster_aura = customtkinter.CTkLabel(self.tab_view.tab("Abilities"), textvariable=self.monster_aura_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_defensive_abilities_var = customtkinter.StringVar()
+        self.monster_defensive_abilities = customtkinter.CTkLabel(self.tab_view.tab("Abilities"), wraplength=630, textvariable=self.monster_defensive_abilities_var, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_sq_var = customtkinter.StringVar()
+        self.monster_sq = customtkinter.CTkLabel(self.tab_view.tab("Abilities"), textvariable=self.monster_sq_var, wraplength=630, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+        self.tabview_scrollable_frame = customtkinter.CTkScrollableFrame(self.tab_view.tab("Abilities"), width=600, height=250, label_text="Special Abilities", label_anchor="center")
+        self.monster_special_abilities_var = customtkinter.StringVar()
+        self.monster_special_abilities = customtkinter.CTkLabel(self.tabview_scrollable_frame, textvariable=self.monster_special_abilities_var, wraplength=600, font=("Courier", 13), text_color=config["COLORS"]["TEXT"], justify="left")
+
+            # 3 - Martial
+        self.monster_init_var = customtkinter.StringVar()
+        self.monster_init = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_init_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_ac_var = customtkinter.StringVar()
+        self.monster_ac = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_ac_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_hp_var = customtkinter.StringVar()
+        self.monster_hp = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_hp_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_saves_var = customtkinter.StringVar()
+        self.monster_saves = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_saves_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_resistances_var = customtkinter.StringVar()
+        self.monster_resistances = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_resistances_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_special_attacks_var = customtkinter.StringVar()
+        self.monster_special_attacks = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_special_attacks_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_bab_var = customtkinter.StringVar()
+        self.monster_bab = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_bab_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_space_reach_var = customtkinter.StringVar()
+        self.monster_space_reach = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_space_reach_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_melee_var = customtkinter.StringVar()
+        self.monster_melee = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_melee_var, text_color=config["COLORS"]["TEXT"], justify="left")
+        self.monster_ranged_var = customtkinter.StringVar()
+        self.monster_ranged = customtkinter.CTkLabel(self.tab_view.tab("Martial"), font=("Courier", 13), wraplength=630, textvariable=self.monster_ranged_var, text_color=config["COLORS"]["TEXT"], justify="left")
+
+            # 4 - Spells
+        self.monster_spell_like_abilities_var = customtkinter.StringVar()
+        self.monster_spell_like_abilities = customtkinter.CTkLabel(self.tab_view.tab("Spells"), textvariable=self.monster_spell_like_abilities_var, text_color=config["COLORS"]["TEXT"])
+        self.monster_spells_known_var = customtkinter.StringVar()
+        self.monster_spells_known = customtkinter.CTkLabel(self.tab_view.tab("Spells"), textvariable=self.monster_spells_known_var, text_color=config["COLORS"]["TEXT"])
+        self.monster_spells_prepared_var = customtkinter.StringVar()
+        self.monster_spells_prepared = customtkinter.CTkLabel(self.tab_view.tab("Spells"), textvariable=self.monster_spells_prepared_var, text_color=config["COLORS"]["TEXT"])
+        self.monster_spell_domains_var = customtkinter.StringVar()
+        self.monster_spell_domains = customtkinter.CTkLabel(self.tab_view.tab("Spells"), textvariable=self.monster_spell_domains_var, text_color=config["COLORS"]["TEXT"])
 
         # Filters widgets
         self.monster_cr_combobox_var = customtkinter.StringVar(value=self.monster_cr_list[0])
-        self.monster_cr_combobox = customtkinter.CTkComboBox(self, values=self.monster_cr_list, variable=self.monster_cr_combobox_var, width=20)
+        self.monster_cr_combobox = customtkinter.CTkComboBox(self, values=self.monster_cr_list, variable=self.monster_cr_combobox_var, width=100)
 
         self.update_listbox()
 
@@ -46,95 +122,101 @@ class Monster_Frame(customtkinter.CTkFrame):
         # Place widget to Monster Frame
         self.setup_frame()
 
-        # Implement widgets to TabView - Summary
-        # Information of a monster
-        self.monster_name_var = customtkinter.StringVar(value="Monster Name: ")
-        self.monster_name = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_name_var, font=("Arial", 20), text_color=config["COLORS"]["TEXT"])
-        self.monster_cr_var = customtkinter.StringVar(value="CR: ")
-        self.monster_cr = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_cr_var, font=("Arial", 15), text_color=config["COLORS"]["TEXT"])
-        self.monster_exp_var = customtkinter.StringVar(value="EXP: ")
-        self.monster_exp = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_exp_var, font=("Arial", 15), text_color=config["COLORS"]["TEXT"])
-        self.monster_alignment_var = customtkinter.StringVar(value="Alignment: ")
-        self.monster_alignment = customtkinter.CTkLabel(self.tab_view.tab("Summary"), textvariable=self.monster_alignment_var, font=("Arial", 15), text_color=config["COLORS"]["TEXT"])
-
-        # Abilities of a monster
-        self.monster_abilities_holder = customtkinter.CTkFrame(self.tab_view.tab("Summary"), width=70, height=300)
-        self.monster_str_var = customtkinter.StringVar(value="Strength")
-        self.monster_str = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_str_var, text_color=config["COLORS"]["TEXT"])
-        self.monster_dex_var = customtkinter.StringVar(value="Dexterity")
-        self.monster_dex = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_dex_var, text_color=config["COLORS"]["TEXT"])
-        self.monster_con_var = customtkinter.StringVar(value="Condition")
-        self.monster_con = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_con_var, text_color=config["COLORS"]["TEXT"])
-        self.monster_int_var = customtkinter.StringVar(value="Intelligence")
-        self.monster_int = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_int_var, text_color=config["COLORS"]["TEXT"])
-        self.monster_wis_var = customtkinter.StringVar(value="Wisdom")
-        self.monster_wis = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_wis_var, text_color=config["COLORS"]["TEXT"])
-        self.monster_cha_var = customtkinter.StringVar(value="Charisma")
-        self.monster_cha = customtkinter.CTkLabel(self.monster_abilities_holder, textvariable=self.monster_cha_var, text_color=config["COLORS"]["TEXT"])
-
-        # Monster Skills
-        self.monster_skills_holder = customtkinter.CTkScrollableFrame(self.tab_view.tab("Summary"), width=70, height=300)
-
-        self.setup_summary_view()
-
-        # Place widgets to TabView - Abilities
-        # Place widgets to TabView - Martial
-        # Place widgets to TabView - Spells
-
     def load_data(self):
         # Loading CSV DataBase
-        with open("DataBase/MonsterList.csv", 'r') as csv_file:
+        with open("DataBase/monster_bestiary_full - Updated 27Jul2015.csv", 'r', encoding='utf-8') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader, None)
             cr_set = set()
 
             for row in csv_reader:
                 monster = Monster(row)
-
-                # Add data to sets to eliminate duplicates
-                cr_set.add(float(monster.cr))
-                self.monster_list[monster.name] = monster
+                try:
+                    cr_float = float(monster.cr)
+                    cr_set.add(cr_float)
+                    self.monster_list[monster.name] = monster
+                except ValueError:
+                    pass
 
             # Convert sets back to lists
             self.monster_cr_list = sorted(cr_set)
             self.monster_cr_list = [str(int(cr) if cr.is_integer() else cr) for cr in self.monster_cr_list]
 
     def setup_frame(self):
-        self.monster_list_box.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
-        self.tab_view.grid(row=0, column=1, rowspan=2, sticky="nsew", padx=10, pady=10)
-        self.monster_cr_combobox.grid(row=0, column=0, sticky="ew", padx=10)
+        self.monster_list_box.place(x=10, y=50)
+        self.tab_view.place(x=355, y=10)
+        self.monster_cr_combobox.place(x=10, y=10)
+
+        self.monster_name.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        self.monster_type.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky="nsew")
+        self.monster_cr.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.monster_xp.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+        self.monster_ability_scores.grid(row=3, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_skills.grid(row=4, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_feats.grid(row=5, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_languages.grid(row=7, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_environment.grid(row=9, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_organization.grid(row=10, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+        self.monster_treasure.grid(row=11, column=0, padx=10, pady=10, sticky="w", columnspan=3)
+
+        self.monster_senses.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.monster_aura.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.monster_defensive_abilities.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+        self.monster_sq.grid(row=6, column=0, padx=10, pady=10, sticky="w")
+        self.tabview_scrollable_frame.grid(row=8, column=0, padx=10, pady=10, sticky="nsew")
+        self.monster_special_abilities.grid(row=0, column=0)
+
+        self.monster_hp.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.monster_ac.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.monster_saves.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.monster_resistances.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        self.monster_init.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        self.monster_bab.grid(row=6, column=0, padx=10, pady=10, sticky="w")
+        self.monster_space_reach.grid(row=7, column=0, padx=10, pady=10, sticky="w")
+        self.monster_melee.grid(row=9, column=0, padx=10, pady=10, sticky="w")
+        self.monster_ranged.grid(row=10, column=0, padx=10, pady=10, sticky="w")
+        self.monster_special_attacks.grid(row=11, column=0, padx=10, pady=10, sticky="w")
+
+        self.monster_spell_like_abilities.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.monster_spells_known.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.monster_spells_prepared.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+        self.monster_spell_domains.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 
     def show_monster_data(self, selected_option):
         selected_monster = self.monster_list[selected_option]
-        self.monster_name_var.set(f"{selected_monster.name} ({selected_monster.size} {selected_monster.type})")
-        self.monster_exp_var.set(f"EXP: {selected_monster.xp}")
-        self.monster_cr_var.set(f"CR: {selected_monster.cr}")
-        self.monster_alignment_var.set(f"Alignment: {selected_monster.alignment}")
+        self.monster_name_var.set(value=selected_monster.name)
+        self.monster_type_var.set(value=f"{selected_monster.alignment} {selected_monster.size} {selected_monster.type} {selected_monster.subtype}")
+        self.monster_cr_var.set(value=f"CR: {selected_monster.cr}")
+        self.monster_xp_var.set(value=f"XP: {selected_monster.xp}")
+        self.monster_ability_scores_var.set(value=f"Ability Scores: {selected_monster.ability_scores}")
+        self.monster_skills_var.set(value=f"Skills: {selected_monster.skills}")
+        self.monster_feats_var.set(value=f"Feats: {selected_monster.feats}")
+        self.monster_languages_var.set(value=f"Languages: {selected_monster.languages}")
+        self.monster_environment_var.set(value=f"Environment: {selected_monster.environment}")
+        self.monster_organization_var.set(value=f"Organization: {selected_monster.organization}")
+        self.monster_treasure_var.set(value=f"Treasure: {selected_monster.treasure}")
 
-        self.monster_str_var.set(f"STR: {selected_monster.str}")
-        self.monster_dex_var.set(f"DEX: {selected_monster.dex}")
-        self.monster_con_var.set(f"CON: {selected_monster.con}")
-        self.monster_int_var.set(f"INT: {selected_monster.int}")
-        self.monster_wis_var.set(f"WIS: {selected_monster.wis}")
-        self.monster_cha_var.set(f"CHA: {selected_monster.cha}")
+        self.monster_senses_var.set(value=f"Senses: {selected_monster.senses}")
+        self.monster_aura_var.set(value=f"Aura: {selected_monster.aura}")
+        self.monster_defensive_abilities_var.set(value=f"Defensive Abilities: {selected_monster.defensive_abilities}")
+        self.monster_sq_var.set(value=f"Special Qualities: {selected_monster.sq}")
+        self.monster_special_abilities_var.set(value=self.add_double_newline(selected_monster.special_abilities))
 
-        self.parse_and_print_skills(selected_monster)
+        self.monster_init_var.set(value=f"Initiative: {self.analyze_number(selected_monster.init)}, Speed: {selected_monster.speed}")
+        self.monster_ac_var.set(value=f"AC: {selected_monster.ac} {selected_monster.ac_mods}")
+        self.monster_hp_var.set(value=f"HP: {selected_monster.hp} {selected_monster.hd} {selected_monster.hp_mods}")
+        self.monster_saves_var.set(value=f"Saves: {selected_monster.saves} {selected_monster.save_mods}")
+        self.monster_resistances_var.set(value=f"DR:{selected_monster.dr}, Immune:{selected_monster.immune}, Resist:{selected_monster.resist}, SR:{selected_monster.sr}, Weakness:{selected_monster.weaknesses}")
+        self.monster_bab_var.set(value=f"BaB: {self.analyze_number(selected_monster.base_atk)}, CMB: {selected_monster.cmb}, CMD: {selected_monster.cmd}")
+        self.monster_space_reach_var.set(value=f"Space/Reach: {selected_monster.space}/{selected_monster.reach}")
+        self.monster_melee_var.set(value=f"Melee: {selected_monster.melee}")
+        self.monster_ranged_var.set(value=f"Ranged: {selected_monster.ranged}")
+        self.monster_special_attacks_var.set(value=f"Special Attacks: {selected_monster.special_attacks}")
 
-    def setup_summary_view(self):
-        self.monster_name.grid(row=0, column=0, columnspan=3, padx=10, pady=10)
-        self.monster_cr.grid(row=1, column=2, padx=10, pady=10)
-        self.monster_exp.grid(row=1, column=0, padx=10, pady=10)
-        self.monster_alignment.grid(row=1, column=1, padx=10, pady=10)
-
-        self.monster_abilities_holder.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-        self.monster_str.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
-        self.monster_dex.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
-        self.monster_con.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
-        self.monster_int.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
-        self.monster_wis.grid(row=5, column=0, padx=10, pady=10, sticky="ew")
-        self.monster_cha.grid(row=6, column=0, padx=10, pady=10, sticky="ew")
-
-        self.monster_skills_holder.grid(row=2, column=1, padx=10, pady=10, sticky="nsew", columnspan=2)
+        self.monster_spell_like_abilities_var.set(value=selected_monster.spell_like_abilities)
+        self.monster_spells_known_var.set(value=selected_monster.spells_known)
+        self.monster_spells_prepared_var.set(value=selected_monster.spells_prepared)
+        self.monster_spell_domains_var.set(value=selected_monster.spell_domains)
 
     def update_listbox(self, *args):
         # Get the selected filter criteria
@@ -160,22 +242,21 @@ class Monster_Frame(customtkinter.CTkFrame):
                 filtered_monsters.append(monster)
         return filtered_monsters
 
-    def parse_and_print_skills(self, selected_monster):
-        for widget in self.monster_skills_holder.winfo_children():
-            widget.destroy()
-        if selected_monster is not None:
-            skills = selected_monster.skills.split(', ')
-            skills_list = []
-            for skill in skills:
-                if "(" in skill and ")" in skill:
-                    skills_list.append(skill)
-                else:
-                    skills_list.extend(skill.split(", "))
-            skills_text = ', '.join(skills_list)
-            skills_text = skills_text.replace(", ", "\n")
+    def add_double_newline(self, input_str):
+        pattern = re.compile(r'([A-Z][a-zA-Z\s]+)\s+(\(Ex\)|\(Su\)|\(Sp\))')
+        result = pattern.sub(r'\n\n\1\2\n\n', input_str)
+        return result
 
-            skills_label = customtkinter.CTkLabel(self.monster_skills_holder, text=skills_text)
-            skills_label.grid(row=0, column=0, sticky="nw", padx=10, pady=10)
-
-
-
+    def analyze_number(self, input_value):
+        try:
+            number = int(input_value)
+            if number > 0:
+                result = f'+{number}'
+                return result
+            elif number < 0:
+                result = f'-{abs(number)}'
+                return result
+            else:
+                return '0'
+        except ValueError:
+            return 'Błąd', 'Podano nieprawidłowy format liczby'
