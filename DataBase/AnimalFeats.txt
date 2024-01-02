@@ -1,0 +1,27 @@
+Acrobatic
+Agile Maneuvers
+Armor Proficiency (light,medium, and heavy)
+Athletic
+Blind-Fight
+Combat Reflexes
+Diehard
+Dodge
+Endurance
+Great Fortitude
+Improved Bull Rush
+Improved Initiative
+Improved Natural Armor
+Improved Natural Attack
+Improved Overrun
+Intimidating Prowess
+Iron Will
+Lightning Reflexes
+Mobility
+Power Attack
+Run
+Skill Focus
+Spring Attack
+Stealthy
+Toughness
+Weapon Finesse
+Weapon Focus

@@ -5,7 +5,6 @@ from TabView import MyTabView
 from CTkListbox import *
 import re
 
-
 class Monster_Frame(customtkinter.CTkFrame):
     def __init__(self, parent, controller, config):
         customtkinter.CTkFrame.__init__(self, parent)
@@ -18,7 +17,7 @@ class Monster_Frame(customtkinter.CTkFrame):
         self.monster_list_box = CTkListbox(self, border_color=config["COLORS"]["BUTTON"],
                                            border_width=1,
                                            width=300,
-                                           height=600,
+                                           height=615,
                                            hover_color=config["COLORS"]["HOVER"],
                                            text_color=config["COLORS"]["TEXT"],
                                            multiple_selection=False,
@@ -122,6 +121,7 @@ class Monster_Frame(customtkinter.CTkFrame):
         self.monster_entry_filter = customtkinter.CTkEntry(self, width=200, placeholder_text="Filtering by name")
 
         self.monster_entry_filter.bind("<KeyRelease>", self.update_listbox)
+        self.monster_entry_filter.configure(validate="key", validatecommand=(self.register(self.validate_entry), "%P"))
 
         self.update_listbox()
 
@@ -223,7 +223,7 @@ class Monster_Frame(customtkinter.CTkFrame):
 
         self.monster_spell_like_abilities_var.set(value=selected_monster.spell_like_abilities)
         self.monster_spells_known_var.set(value=selected_monster.spells_known)
-        self.monster_spells_prepared_var.set(value=self.formatting_spell_prepared(selected_monster.spells_prepared))
+        self.monster_spells_prepared_var.set(value=selected_monster.spells_prepared)
 
     def update_listbox(self, *args):
         selected_cr = self.monster_cr_combobox_var.get()
@@ -268,7 +268,5 @@ class Monster_Frame(customtkinter.CTkFrame):
         except ValueError:
             return None
 
-    def formatting_spell_prepared(self, text):
-        formatted_text = re.sub(r'(\d{1,2}[a-z]*-[^\n]+\n)', r'\n\1', text)
-        formatted_text = re.sub(r'\n\n', r'\n', formatted_text)
-        return formatted_text
+    def validate_entry(self, text):
+        return text.isalpha() or text == ""

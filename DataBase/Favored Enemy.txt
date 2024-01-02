@@ -1,0 +1,32 @@
+Aberration 
+Humanoid (other subtype)
+Animal 
+Magical beast
+Construct 
+Monstrous humanoid
+Dragon 
+Ooze
+Fey 
+Outsider (air)
+Humanoid (aquatic) 
+Outsider (chaotic)
+Humanoid (dwarf ) 
+Outsider (earth)
+Humanoid (elf ) 
+Outsider (evil)
+Humanoid (giant) 
+Outsider (fire)
+Humanoid (goblinoid) 
+Outsider (good)
+Humanoid (gnoll) 
+Outsider (lawful)
+Humanoid (gnome) 
+Outsider (native)
+Humanoid (halfling) 
+Outsider (water)
+Humanoid (human) 
+Plant
+Humanoid (orc) 
+Undead
+Humanoid (reptilian) 
+Vermin

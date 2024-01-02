@@ -1,0 +1,176 @@
+Acrobatic
+Agile Maneuvers
+Alertness
+Alignment Channel
+Animal Affinity
+Arcane Armor Training
+Arcane Armor Mastery
+Arcane Strike
+Armor Proficiency, Light
+Armor Proficiency, Medium
+Armor Proficiency, Heavy
+Athletic
+Augment Summoning
+Blind-Fight
+Catch Off-Guard
+Channel Smite
+Combat Casting
+Combat Expertise
+Improved Disarm
+Greater Disarm
+Improved Feint
+Greater Feint
+Improved Trip
+Greater Trip
+Whirlwind Attack
+Combat Reflexes
+Stand Still
+Command Undead
+Critical Focus
+Bleeding Critical
+Blinding Critical
+Critical Mastery
+Deafening Critical
+Sickening Critical
+Staggering Critical
+Stunning Critical
+Tiring Critical
+Exhausting Critical
+Deadly Aim
+Deceitful
+Defensive Combat Training
+Deft Hands
+Disruptive
+Spellbreaker
+Dodge
+Mobility
+Spring Attack
+Wind Stance
+Lightning Stance
+Elemental Channel
+Endurance
+Diehard
+Eschew Materials
+Exotic Weapon Proficiency
+Extra Channel
+Extra Ki
+Extra Lay On Hands
+Extra Mercy
+Extra Performance
+Extra Rage
+Fleet
+Great Fortitude
+Improved Great Fortitude
+Improved Channel
+Improved Counterspell
+Improved Critical
+Improved Familiar
+Improved Initiative
+Improved Unarmed Strike
+Deflect Arrows
+Snatch Arrows
+Improved Grapple
+Greater Grapple
+Scorpion Style
+Gorgon’s Fist
+Medusa’s Wrath
+Stunning Fist
+Improvised Weapon Mastery
+Intimidating Prowess
+Iron Will
+Improved Iron Will
+Leadership
+Lightning Reflexes
+Improved Lightning Reflexes
+Lunge
+Magical Aptitude
+Martial Weapon Proficiency
+Master Craftsman
+Mounted Combat
+Mounted Archery
+Ride-By Attack
+Spirited Charge
+Trample
+Unseat
+Natural Spell
+Nimble Moves
+Acrobatic Steps
+Persuasive
+Point-Blank Shot
+Far Shot
+Precise Shot
+Improved Precise Shot
+Pinpoint Targeting
+Shot on the Run
+Rapid Shot
+Manyshot
+Power Attack
+Cleave
+Great Cleave
+Improved Bull Rush
+Greater Bull Rush
+Improved Overrun
+Greater Overrun
+Improved Sunder
+Greater Sunder
+Quick Draw
+Rapid Reload
+Run
+Selective Channeling
+Self-Sufficient
+Shield Proficiency
+Improved Shield Bash
+Shield Slam
+Shield Master
+Shield Focus
+Greater Shield Focus
+Tower Shield Proficiency
+Simple Weapon Proficiency
+Skill Focus
+Spell Focus
+Greater Spell Focus
+Spell Mastery
+Spell Penetration
+Greater Spell Penetration
+Stealthy
+Step Up
+Strike Back
+Throw Anything
+Toughness
+Turn Undead
+Two-Weapon Fighting
+Double Slice
+Two-Weapon Rend
+Improved Two-Weapon Fighting
+Greater Two-Weapon Fighting
+Two-Weapon Defense
+Vital Strike
+Improved Vital Strike
+Greater Vital Strike
+Weapon Finesse
+Weapon Focus
+Dazzling Display
+Shatter Defenses
+Deadly Stroke
+Greater Weapon Focus
+Penetrating Strike
+Greater Penetrating Strike
+Weapon Specialization
+Greater Weapon Specialization
+Brew Potion
+Craft Magic Arms and Armor
+Craft Rod
+Craft Staff
+Craft Wand
+Craft Wondrous Item
+Forge Ring
+Scribe Scroll
+Empower Spell
+Enlarge Spell
+Extend Spell
+Heighten Spell
+Maximize Spell
+Quicken Spell
+Silent Spell
+Still Spell
+Widen Spell

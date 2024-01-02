@@ -1,0 +1,11 @@
+Cold (ice, glaciers, snow, and tundra)
+Desert (sand and wastelands)
+Forest (coniferous and deciduous)
+Jungle
+Mountain (including hills)
+Plains
+Planes (pick one, other than Material Plane)
+Swamp
+Underground (caves and dungeons)
+Urban (buildings, streets, and sewers)
+Water (above and below the surface)
