@@ -41,7 +41,5 @@ class Skill_Widgets:
             total = ranks + ability_modifier + misc_modifier
 
             self.total.set(str(total))
-            self.ability_mod_var.set(str(ability_modifier))
-
         except ValueError:
             pass

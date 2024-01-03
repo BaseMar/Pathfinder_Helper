@@ -31,8 +31,6 @@ class Saving_Throws:
         misc_modifier.grid(row=row, column=5, padx=2, pady=2)
         temporary_modifier.grid(row=row, column=6, padx=2, pady=2)
 
-        self.calculate_total_bonus()
-
     def calculate_total_bonus(self, *args):
         try:
             base_save = int(self.base_save.get())
