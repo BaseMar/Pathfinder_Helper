@@ -17,8 +17,9 @@ class MusicController:
                 if song.endswith(".mp3"):
                     self.view.music_listbox.insert(END, song)
 
-    def play_music(self):
+    def play_music(self, music_name):
         self.model.is_playing = True
+        print(music_name[:-4])
         mixer.music.load(self.view.music_listbox.get())
         mixer.music.play()
         self.view.pause_music_button.configure(image=self.model.pause_button)
