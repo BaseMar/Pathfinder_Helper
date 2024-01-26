@@ -1,5 +1,5 @@
 import mysql.connector
-class MySQL_Service:
+class MySQLService:
     def __init__(self, table):
         self.host = 'localhost'
         self.user = 'Martino'
