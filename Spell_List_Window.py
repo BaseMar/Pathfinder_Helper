@@ -63,7 +63,7 @@ class Spell_List_Window(customtkinter.CTkToplevel):
     def show_spells(self, spell_lvl, selected_class, spell_list):
         try:
             self.spell_listbox.delete(0, "end")
-        except:
+        except IndexError:
             pass
 
         class_map = {
@@ -85,6 +85,7 @@ class Spell_List_Window(customtkinter.CTkToplevel):
             self.spell_listbox.insert("end", spell.name)
 
     def show_spell_data(self, choice):
+        selected_spell_index = None
         for index, spell in enumerate(self.spell_list):
             if spell.name == choice:
                 selected_spell_index = index
