@@ -11,8 +11,3 @@ class Ranger:
         self.spells_per_day_2 = data.get('2_spells_per_day')
         self.spells_per_day_3 = data.get('3_spells_per_day')
         self.spells_per_day_4 = data.get('4_spells_per_day')
-
-    def __repr__(self):
-        return (f"Ranger(id={self.id}, lvl={self.lvl}, bab={self.bab}, fort_save = {self.fort_save}, ref_save={self.ref_save}, will_save={self.will_save}, special={self.special}),"
-                f"1lvl spells per day: {self.spells_per_day_1}, 2lvl spells per day: {self.spells_per_day_2},"
-                f"3lvl spells per day: {self.spells_per_day_3}, 4lvl spells per day: {self.spells_per_day_4}")

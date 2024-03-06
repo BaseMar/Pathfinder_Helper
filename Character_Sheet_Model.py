@@ -6,6 +6,9 @@ class CharacterSheetModel:
         self.character_deity_list = []
         self.character_class_list = []
         self.character_lvl_list = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
+        self.character_selected_lvl = 1
+        self.character_filename = ""
+        self.selected_character_class = None
         self.character_homeland = ""
         self.character_race_list = []
         self.character_gender_list = ["Male \u2642", "Female \u2640"]
@@ -13,6 +16,8 @@ class CharacterSheetModel:
         self.character_racial_traits_list = []
         self.character_feats_list = []
         self.character_languages_list = ["Common"]
+        self.skill_dictionary_settings = {}
+        self.character_spell_list = {}
 
         self.character_hp = 1
 

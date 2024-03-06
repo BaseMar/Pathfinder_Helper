@@ -1,11 +1,11 @@
 import mysql.connector
 class MySQLService:
-    def __init__(self, table):
+    def __init__(self):
+        self.table = ""
         self.host = 'localhost'
         self.user = 'Martino'
         self.password = '12345'
         self.database = 'pathfinderschema'
-        self.table = table
         self.connection = None
         self.cursor = None
         self.data = []
@@ -23,7 +23,9 @@ class MySQLService:
         if self.connection:
             self.connection.close()
 
-    def load_data(self, data_container):
+    def load_data(self, table, data_container):
+        self.data = []
+        self.table = table
         if not self.connection:
             self.connect()
 

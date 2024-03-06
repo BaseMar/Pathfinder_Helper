@@ -1,3 +1,4 @@
 class MonsterModel:
     def __init__(self):
-        pass
+        self.monster_list = {}
+        self.monster_cr_list = []

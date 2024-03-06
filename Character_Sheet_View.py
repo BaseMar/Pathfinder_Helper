@@ -1,6 +1,9 @@
 import re
 import customtkinter
 from CTkListbox import *
+from PIL import Image
+from Spell_List_Window import Spell_List_Window
+
 
 def validate(new_value):
     return len(new_value) <= 30 and new_value.isalpha() or new_value == ""
@@ -29,7 +32,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.tabview.add("Spells")
         self.tabview.tab("Spells").rowconfigure(index=1, minsize=30)
         self.tabview.add("Gear")
-        self.tabview.add("Companion")
+        self.toplevel_window = None
 
         # List of Saved Characters
         self.listbox = CTkListbox(self, width=300, border_width=1, border_color=config["COLORS"]["BUTTON"], text_color=config["COLORS"]["TEXT"], hover_color=config["COLORS"]["HOVER"])
@@ -49,9 +52,9 @@ class CharacterSheetView(customtkinter.CTkFrame):
 
         self.character_class_label = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Class & lvl: ", text_color=config["COLORS"]["TEXT"])
         self.character_class_var = customtkinter.StringVar()
-        self.character_class = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_class_var)
+        self.character_class = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_class_var, command=self.class_selection)
         self.character_lvl_var = customtkinter.StringVar()
-        self.character_lvl = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_lvl_var, width=80)
+        self.character_lvl = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_lvl_var, width=80, command=self.change_lvl)
 
         self.character_deity_label = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Deity: ", text_color=config["COLORS"]["TEXT"])
         self.character_deity_var = customtkinter.StringVar()
@@ -63,17 +66,17 @@ class CharacterSheetView(customtkinter.CTkFrame):
 
         self.character_race_label = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Race: ", text_color=config["COLORS"]["TEXT"])
         self.character_race_var = customtkinter.StringVar()
-        self.character_race = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_race_var)
+        self.character_race = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_race_var, command=self.race_selection)
 
         self.character_size_label = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Size: ", text_color=config["COLORS"]["TEXT"])
-        self.character_size = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Medium", text_color=config["COLORS"]["TEXT"], state="disabled")
+        self.character_size = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="", text_color=config["COLORS"]["TEXT"], state="disabled")
 
         self.character_gender_label = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Gender: ", text_color=config["COLORS"]["TEXT"])
         self.character_gender_var = customtkinter.StringVar()
         self.character_gender = customtkinter.CTkComboBox(self.tabview.tab("Summary"), text_color=config["COLORS"]["TEXT"], variable=self.character_gender_var)
 
         self.racial_trait_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("Summary"), corner_radius=10, border_width=1, border_color=config["COLORS"]["BUTTON"], label_text="Racial Traits", label_anchor="center")
-        self.feats_frame = customtkinter.CTkScrollableFrame(self.tabview.tab("Summary"), corner_radius=10, border_width=1, border_color=config["COLORS"]["BUTTON"], label_text="Feats", label_anchor="center")
+        self.special_qualities = customtkinter.CTkScrollableFrame(self.tabview.tab("Summary"), corner_radius=10, border_width=1, border_color=config["COLORS"]["BUTTON"], label_text="Special Qualities", label_anchor="center")
 
         self.character_languages = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Languages: ", text_color=config["COLORS"]["TEXT"])
 
@@ -529,6 +532,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spell_save_dc_0 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_save_dc_0_var)
         self.spells_per_day_0_var = customtkinter.StringVar()
         self.spells_per_day_0 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_0_var)
+        self.spell_0_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="0 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(0, config))
         self.spells_known_1_var = customtkinter.StringVar()
         self.spells_known_1 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_1_var)
         self.spell_save_dc_1_var = customtkinter.StringVar()
@@ -537,6 +541,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_1 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_1_var)
         self.spell_bonus_1_var = customtkinter.StringVar()
         self.spell_bonus_1 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_1_var)
+        self.spell_1_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="1 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(1, config))
         self.spells_known_2_var = customtkinter.StringVar()
         self.spells_known_2 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_2_var)
         self.spell_save_dc_2_var = customtkinter.StringVar()
@@ -545,6 +550,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_2 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_2_var)
         self.spell_bonus_2_var = customtkinter.StringVar()
         self.spell_bonus_2 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_2_var)
+        self.spell_2_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="2 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(2, config))
         self.spells_known_3_var = customtkinter.StringVar()
         self.spells_known_3 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_3_var)
         self.spell_save_dc_3_var = customtkinter.StringVar()
@@ -553,6 +559,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_3 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_3_var)
         self.spell_bonus_3_var = customtkinter.StringVar()
         self.spell_bonus_3 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_3_var)
+        self.spell_3_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="3 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(3, config))
         self.spells_known_4_var = customtkinter.StringVar()
         self.spells_known_4 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_4_var)
         self.spell_save_dc_4_var = customtkinter.StringVar()
@@ -561,6 +568,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_4 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_4_var)
         self.spell_bonus_4_var = customtkinter.StringVar()
         self.spell_bonus_4 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_4_var)
+        self.spell_4_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="4 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(4, config))
         self.spells_known_5_var = customtkinter.StringVar()
         self.spells_known_5 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_5_var)
         self.spell_save_dc_5_var = customtkinter.StringVar()
@@ -569,6 +577,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_5 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_5_var)
         self.spell_bonus_5_var = customtkinter.StringVar()
         self.spell_bonus_5 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_5_var)
+        self.spell_5_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="5 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(5, config))
         self.spells_known_6_var = customtkinter.StringVar()
         self.spells_known_6 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_6_var)
         self.spell_save_dc_6_var = customtkinter.StringVar()
@@ -577,6 +586,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_6 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_6_var)
         self.spell_bonus_6_var = customtkinter.StringVar()
         self.spell_bonus_6 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_6_var)
+        self.spell_6_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="6 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(6, config))
         self.spells_known_7_var = customtkinter.StringVar()
         self.spells_known_7 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_7_var)
         self.spell_save_dc_7_var = customtkinter.StringVar()
@@ -585,6 +595,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_7 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_7_var)
         self.spell_bonus_7_var = customtkinter.StringVar()
         self.spell_bonus_7 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_7_var)
+        self.spell_7_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="7 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(7, config))
         self.spells_known_8_var = customtkinter.StringVar()
         self.spells_known_8 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_8_var)
         self.spell_save_dc_8_var = customtkinter.StringVar()
@@ -593,6 +604,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_8 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_8_var)
         self.spell_bonus_8_var = customtkinter.StringVar()
         self.spell_bonus_8 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_8_var)
+        self.spell_8_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="8 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(8, config))
         self.spells_known_9_var = customtkinter.StringVar()
         self.spells_known_9 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_known_9_var)
         self.spell_save_dc_9_var = customtkinter.StringVar()
@@ -601,6 +613,11 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_9 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spells_per_day_9_var)
         self.spell_bonus_9_var = customtkinter.StringVar()
         self.spell_bonus_9 = customtkinter.CTkLabel(self.tabview.tab("Spells"), text_color=config["COLORS"]["TEXT"], textvariable=self.spell_bonus_9_var)
+        self.spell_9_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="9 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(9, config))
+
+        # Gear Widgets
+        item_slot_img = customtkinter.CTkImage(dark_image=Image.open("Images/ItemSlots.png"), size=(500, 630))
+        self.img_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), image=item_slot_img, text="")
 
         # Validations
         vcd = (self.tabview.tab("Summary").register(validate), '%P')
@@ -621,6 +638,41 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.wis_ability_increase.configure(validate="key", validatecommand=vcd_2)
         self.cha_ability_score.configure(validate="key", validatecommand=vcd_2)
         self.cha_ability_increase.configure(validate="key", validatecommand=vcd_2)
+        self.acrobatics_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.appraise_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.bluff_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.climb_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.craft_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.diplomacy_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.disable_device_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.disguise_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.escape_artist_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.fly_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.handle_animal_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.heal_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.intimidate_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_arcana_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_dungeoneering_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_engineering_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_geography_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_history_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_local_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_nature_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_nobility_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_planes_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.knowledge_religion_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.linguistics_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.perception_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.perform_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.profession_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.ride_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.sense_motive_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.sleight_of_hand_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.spellcraft_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.stealth_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.survival_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.swim_ranks.configure(validate="key", validatecommand=vcd_2)
+        self.use_magic_device_ranks.configure(validate="key", validatecommand=vcd_2)
 
         # Event handling
         self.str_ability_score.bind("<FocusOut>", fill_empty_with_zero)
@@ -648,6 +700,41 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.wis_ability_increase.bind("<KeyRelease>", lambda event: self.calculate_wis_mod())
         self.cha_ability_score.bind("<KeyRelease>", lambda event: self.calculate_cha_mod())
         self.cha_ability_increase.bind("<KeyRelease>", lambda event: self.calculate_cha_mod())
+        self.acrobatics_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.appraise_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.bluff_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.climb_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.craft_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.diplomacy_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.disable_device_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.disguise_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.escape_artist_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.fly_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.handle_animal_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.heal_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.intimidate_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_arcana_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_dungeoneering_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_engineering_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_geography_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_history_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_local_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_nature_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_nobility_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_planes_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.knowledge_religion_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.linguistics_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.perception_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.perform_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.profession_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.ride_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.sense_motive_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.sleight_of_hand_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.spellcraft_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.stealth_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.survival_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.swim_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
+        self.use_magic_device_ranks.bind("<KeyRelease>", lambda event: (self.display_skills(), self.trained_skills()))
 
         # Grid all widgets
         self.grid_widgets()
@@ -691,7 +778,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.character_lvl.grid(row=4, column=2, padx=10, pady=10, sticky="ew")
 
         self.racial_trait_frame.grid(row=6, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
-        self.feats_frame.grid(row=6, column=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.special_qualities.grid(row=6, column=2, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.character_languages.grid(row=7, column=0, columnspan=4, padx=10, pady=10, sticky="w")
 
@@ -946,82 +1033,96 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_known_0.grid(row=2, column=1, padx=10, pady=10)
         self.spell_save_dc_0.grid(row=2, column=2, padx=10, pady=10)
         self.spells_per_day_0.grid(row=2, column=3, padx=10, pady=10)
+        self.spell_0_button.grid(row=2, column=5, padx=10, pady=10)
         self.spells_known_1.grid(row=3, column=1, padx=10, pady=10)
         self.spell_save_dc_1.grid(row=3, column=2, padx=10, pady=10)
         self.spells_per_day_1.grid(row=3, column=3, padx=10, pady=10)
         self.spell_bonus_1.grid(row=3, column=4, padx=10, pady=10)
+        self.spell_1_button.grid(row=3, column=5, padx=10, pady=10)
         self.spells_known_2.grid(row=4, column=1, padx=10, pady=10)
         self.spell_save_dc_2.grid(row=4, column=2, padx=10, pady=10)
         self.spells_per_day_2.grid(row=4, column=3, padx=10, pady=10)
         self.spell_bonus_2.grid(row=4, column=4, padx=10, pady=10)
+        self.spell_2_button.grid(row=4, column=5, padx=10, pady=10)
         self.spells_known_3.grid(row=5, column=1, padx=10, pady=10)
         self.spell_save_dc_3.grid(row=5, column=2, padx=10, pady=10)
         self.spells_per_day_3.grid(row=5, column=3, padx=10, pady=10)
         self.spell_bonus_3.grid(row=5, column=4, padx=10, pady=10)
+        self.spell_3_button.grid(row=5, column=5, padx=10, pady=10)
         self.spells_known_4.grid(row=6, column=1, padx=10, pady=10)
         self.spell_save_dc_4.grid(row=6, column=2, padx=10, pady=10)
         self.spells_per_day_4.grid(row=6, column=3, padx=10, pady=10)
         self.spell_bonus_4.grid(row=6, column=4, padx=10, pady=10)
+        self.spell_4_button.grid(row=6, column=5, padx=10, pady=10)
         self.spells_known_5.grid(row=7, column=1, padx=10, pady=10)
         self.spell_save_dc_5.grid(row=7, column=2, padx=10, pady=10)
         self.spells_per_day_5.grid(row=7, column=3, padx=10, pady=10)
         self.spell_bonus_5.grid(row=7, column=4, padx=10, pady=10)
+        self.spell_5_button.grid(row=7, column=5, padx=10, pady=10)
         self.spells_known_6.grid(row=8, column=1, padx=10, pady=10)
         self.spell_save_dc_6.grid(row=8, column=2, padx=10, pady=10)
         self.spells_per_day_6.grid(row=8, column=3, padx=10, pady=10)
         self.spell_bonus_6.grid(row=8, column=4, padx=10, pady=10)
+        self.spell_6_button.grid(row=8, column=5, padx=10, pady=10)
         self.spells_known_7.grid(row=9, column=1, padx=10, pady=10)
         self.spell_save_dc_7.grid(row=9, column=2, padx=10, pady=10)
         self.spells_per_day_7.grid(row=9, column=3, padx=10, pady=10)
         self.spell_bonus_7.grid(row=9, column=4, padx=10, pady=10)
+        self.spell_7_button.grid(row=9, column=5, padx=10, pady=10)
         self.spells_known_8.grid(row=10, column=1, padx=10, pady=10)
         self.spell_save_dc_8.grid(row=10, column=2, padx=10, pady=10)
         self.spells_per_day_8.grid(row=10, column=3, padx=10, pady=10)
         self.spell_bonus_8.grid(row=10, column=4, padx=10, pady=10)
+        self.spell_8_button.grid(row=10, column=5, padx=10, pady=10)
         self.spells_known_9.grid(row=11, column=1, padx=10, pady=10)
         self.spell_save_dc_9.grid(row=11, column=2, padx=10, pady=10)
         self.spells_per_day_9.grid(row=11, column=3, padx=10, pady=10)
         self.spell_bonus_9.grid(row=11, column=4, padx=10, pady=10)
+        self.spell_9_button.grid(row=11, column=5, padx=10, pady=10)
+
+        self.img_label.grid(row=0, column=0)
 
     def push_data(self, model):
         pass
 
     def pull_data(self, model):
+        # Summary Tab
+        self.character_name_var.set(value=model.character_name)
+        self.character_player_var.set(value=model.character_player)
         self.character_alignment.configure(values=model.character_alignment_list)
         self.character_deity.configure(values=model.character_deity_list)
-        self.character_alignment_var.set(value=model.character_alignment_list[0])
-        self.character_deity_var.set(value=model.character_deity_list[0])
         self.character_race.configure(values=model.character_race_list)
-        self.character_race_var.set(value=model.character_race_list[0])
+        self.character_size.configure(text=model.character_size)
+        self.character_homeland_var.set(value=model.character_homeland)
         self.character_gender.configure(values=model.character_gender_list)
-        self.character_gender_var.set(value=model.character_gender_list[0])
-        self.character_lvl.configure(values=model.character_lvl_list)
-        self.character_lvl_var.set(value=model.character_lvl_list[0])
         self.character_class.configure(values=model.character_class_list)
-        self.character_class_var.set(value=model.character_class_list[0])
+        self.character_class_var.set(value=model.character_filename)
+        self.character_lvl.configure(values=model.character_lvl_list)
+        self.character_lvl_var.set(value=model.character_selected_lvl)
+
+        for widget in self.special_qualities.winfo_children():
+            widget.destroy()
+
+        for widget in self.racial_trait_frame.winfo_children():
+            widget.destroy()
+
+        for index, text in enumerate(model.character_feats_list):
+            label = customtkinter.CTkLabel(self.special_qualities, text=text)
+            label.grid(row=index, column=0, padx=10, pady=10, sticky="w")
+
+        for index, text in enumerate(model.character_racial_traits_list):
+            label = customtkinter.CTkLabel(self.racial_trait_frame, text=text)
+            label.grid(row=index, column=0, padx=10, pady=10, sticky="w")
+
         languages_str = ", ".join(model.character_languages_list)
         self.character_languages.configure(text=f"Languages: {languages_str}")
 
-        self.character_hp_var.set(value=model.character_hp)
-        self.character_initiative_var.set(value=f"INIT: {model.character_initiative_total}")
-        self.character_ac_sum_var.set(value=f"AC: {model.character_ac_sum}")
-        self.character_touch_ac_var.set(value=f"TOUCH: {model.character_touch_ac}")
-        self.character_flatfooted_ac_var.set(value=f"FLAT-FOOTED: {model.character_flat_ac}")
-        self.character_fort_save_sum_var.set(value=f"FORTITUDE: {model.character_fort_save_sum}")
-        self.character_ref_save_sum_var.set(value=f"REFLEX: {model.character_ref_save_sum}")
-        self.character_will_save_sum_var.set(value=f"WILL: {model.character_will_save_sum}")
-        self.character_bab_var.set(value=f"BaB: {model.character_bab}")
-        self.character_spell_resist_var.set(value=f"SPELL RESIST: {model.character_spell_resist}")
-        self.character_cmb_sum_var.set(value=f"CMB: {model.character_cmb_sum}")
-        self.character_cmd_sum_var.set(value=f"CMD: {model.character_cmd_sum}")
-        self.character_speed_var.set(value=f"SPEED: {model.character_speed} ft.")
-
+        # Combat Tab
         self.str_ability_score_var.set(value=model.str_score)
         self.str_ability_increase_var.set(value=model.str_increase)
         self.str_other_mod_var.set(value=model.str_other_bonuses)
         self.str_sum_var.set(value=model.str_sum)
         self.str_mod_var.set(value=model.str_mod)
-
         self.dex_ability_score_var.set(value=model.dex_score)
         self.dex_ability_increase_var.set(value=model.dex_increase)
         self.dex_other_mod_var.set(value=model.dex_other_bonuses)
@@ -1052,6 +1153,21 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.cha_sum_var.set(value=model.cha_sum)
         self.cha_mod_var.set(value=model.cha_mod)
 
+        self.character_hp_var.set(value=model.character_hp)
+        self.character_initiative_var.set(value=f"INIT: {model.character_initiative_total}")
+        self.character_ac_sum_var.set(value=f"AC: {model.character_ac_sum}")
+        self.character_touch_ac_var.set(value=f"TOUCH: {model.character_touch_ac}")
+        self.character_flatfooted_ac_var.set(value=f"FLAT-FOOTED: {model.character_flat_ac}")
+        self.character_fort_save_sum_var.set(value=f"FORTITUDE: {model.character_fort_save_sum}")
+        self.character_ref_save_sum_var.set(value=f"REFLEX: {model.character_ref_save_sum}")
+        self.character_will_save_sum_var.set(value=f"WILL: {model.character_will_save_sum}")
+        self.character_bab_var.set(value=f"BaB: {model.character_bab}")
+        self.character_spell_resist_var.set(value=f"SPELL RESIST: {model.character_spell_resist}")
+        self.character_cmb_sum_var.set(value=f"CMB: {model.character_cmb_sum}")
+        self.character_cmd_sum_var.set(value=f"CMD: {model.character_cmd_sum}")
+        self.character_speed_var.set(value=f"SPEED: {model.character_speed} ft.")
+
+        # Skill Tab
         self.acrobatics_total_var.set(value=model.acrobatics_sum)
         self.acrobatics_abilitymod_var.set(value=model.dex_mod)
         self.acrobatics_ranks_var.set(value=model.acrobatics_rank)
@@ -1192,6 +1308,8 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.use_magic_device_abilitymod_var.set(value=model.cha_mod)
         self.use_magic_device_ranks_var.set(value=model.use_magic_device_rank)
         self.use_magic_device_miscmod_var.set(value=model.use_magic_device_misc_mod)
+
+        # Spells Tab
         self.spells_known_0_var.set(value=model.spells_known_0)
         self.spell_save_dc_0_var.set(value=model.spell_save_dc_0)
         self.spells_per_day_0_var.set(value=model.spells_per_day_0)
@@ -1234,22 +1352,17 @@ class CharacterSheetView(customtkinter.CTkFrame):
 
     def init_data(self):
         model = self.controller.load_data_from_db()
-        self.controller.size_mod()
-        self.cmb_calculation()
-        self.cmd_calculation()
-        self.ac_calculation()
         self.pull_data(model)
 
     def calculate_str_mod(self):
         try:
             str_score = int(self.str_ability_score.get())
             str_inc = int(self.str_ability_increase.get())
-            str_others = int(self.str_other_mod_var.get())
-            model = self.controller.calculate_mod('str', str_score, str_inc, str_others)
+            model = self.controller.calculate_mod('str', str_score, str_inc)
 
             self.cmb_calculation()
             self.cmd_calculation()
-
+            self.display_skills()
             self.pull_data(model)
         except ValueError:
             pass
@@ -1258,14 +1371,13 @@ class CharacterSheetView(customtkinter.CTkFrame):
         try:
             dex_score = int(self.dex_ability_score.get())
             dex_inc = int(self.dex_ability_increase.get())
-            dex_others = int(self.dex_other_mod_var.get())
-            model = self.controller.calculate_mod('dex', dex_score, dex_inc, dex_others)
+            model = self.controller.calculate_mod('dex', dex_score, dex_inc)
 
             self.ac_calculation()
             self.init_calculation()
             self.ref_calculation()
             self.cmd_calculation()
-
+            self.display_skills()
             self.pull_data(model)
         except ValueError:
             pass
@@ -1274,11 +1386,9 @@ class CharacterSheetView(customtkinter.CTkFrame):
         try:
             con_score = int(self.con_ability_score.get())
             con_inc = int(self.con_ability_increase.get())
-            con_others = int(self.con_other_mod_var.get())
-            model = self.controller.calculate_mod('con', con_score, con_inc, con_others)
+            model = self.controller.calculate_mod('con', con_score, con_inc)
 
             self.fort_calculation()
-
             self.pull_data(model)
         except ValueError:
             pass
@@ -1287,8 +1397,10 @@ class CharacterSheetView(customtkinter.CTkFrame):
         try:
             int_score = int(self.int_ability_score.get())
             int_inc = int(self.int_ability_increase.get())
-            int_others = int(self.int_other_mod_var.get())
-            model = self.controller.calculate_mod('int', int_score, int_inc, int_others)
+            model = self.controller.calculate_mod('int', int_score, int_inc)
+
+            self.display_skills()
+            self.pull_spells()
 
             self.pull_data(model)
         except ValueError:
@@ -1298,11 +1410,10 @@ class CharacterSheetView(customtkinter.CTkFrame):
         try:
             wis_score = int(self.wis_ability_score.get())
             wis_inc = int(self.wis_ability_increase.get())
-            wis_others = int(self.wis_other_mod_var.get())
-            model = self.controller.calculate_mod('wis', wis_score, wis_inc, wis_others)
-
+            model = self.controller.calculate_mod('wis', wis_score, wis_inc)
             self.will_calculation()
-
+            self.display_skills()
+            self.pull_spells()
             self.pull_data(model)
         except ValueError:
             pass
@@ -1311,12 +1422,30 @@ class CharacterSheetView(customtkinter.CTkFrame):
         try:
             cha_score = int(self.cha_ability_score.get())
             cha_inc = int(self.cha_ability_increase.get())
-            cha_others = int(self.cha_other_mod_var.get())
-            model = self.controller.calculate_mod('cha', cha_score, cha_inc, cha_others)
-
+            model = self.controller.calculate_mod('cha', cha_score, cha_inc)
+            self.display_skills()
+            self.pull_spells()
             self.pull_data(model)
         except ValueError:
             pass
+
+    def race_selection(self, choice):
+        model = self.controller.race_selection(choice)
+        self.calculate_str_mod()
+        self.calculate_dex_mod()
+        self.calculate_con_mod()
+        self.calculate_int_mod()
+        self.calculate_wis_mod()
+        self.calculate_cha_mod()
+        self.pull_data(model)
+
+    def class_selection(self, choice):
+        model = self.controller.class_selection(choice)
+        self.pull_data(model)
+
+    def change_lvl(self, choice):
+        model = self.controller.change_lvl(choice)
+        self.pull_data(model)
 
     def ac_calculation(self):
         self.controller.calculate_ac()
@@ -1338,3 +1467,77 @@ class CharacterSheetView(customtkinter.CTkFrame):
 
     def cmd_calculation(self):
         self.controller.calculate_cmd()
+
+    def display_skills(self):
+        self.controller.model.acrobatics_rank = int(self.acrobatics_ranks.get())
+        self.controller.model.appraise_rank = int(self.appraise_ranks.get())
+        self.controller.model.bluff_rank = int(self.bluff_ranks.get())
+        self.controller.model.climb_rank = int(self.climb_ranks.get())
+        self.controller.model.craft_rank = int(self.craft_ranks.get())
+        self.controller.model.diplomacy_rank = int(self.diplomacy_ranks.get())
+        self.controller.model.disable_device_rank = int(self.disable_device_ranks.get())
+        self.controller.model.disguise_rank = int(self.disguise_ranks.get())
+        self.controller.model.escape_artist_rank = int(self.escape_artist_ranks.get())
+        self.controller.model.fly_rank = int(self.fly_ranks.get())
+        self.controller.model.handle_animal_rank = int(self.handle_animal_ranks.get())
+        self.controller.model.heal_rank = int(self.heal_ranks.get())
+        self.controller.model.intimidate_rank = int(self.intimidate_ranks.get())
+        self.controller.model.knowledge_arcana_rank = int(self.knowledge_arcana_ranks.get())
+        self.controller.model.knowledge_dungeoneering_rank = int(self.knowledge_dungeoneering_ranks.get())
+        self.controller.model.knowledge_engineering_rank = int(self.knowledge_engineering_ranks.get())
+        self.controller.model.knowledge_geography_rank = int(self.knowledge_geography_ranks.get())
+        self.controller.model.knowledge_history_rank = int(self.knowledge_history_ranks.get())
+        self.controller.model.knowledge_local_rank = int(self.knowledge_local_ranks.get())
+        self.controller.model.knowledge_nature_rank = int(self.knowledge_nature_ranks.get())
+        self.controller.model.knowledge_nobility_rank = int(self.knowledge_nobility_ranks.get())
+        self.controller.model.knowledge_planes_rank = int(self.knowledge_planes_ranks.get())
+        self.controller.model.knowledge_religion_rank = int(self.knowledge_religion_ranks.get())
+        self.controller.model.linguistics_rank = int(self.linguistics_ranks.get())
+        self.controller.model.perception_rank = int(self.perception_ranks.get())
+        self.controller.model.perform_rank = int(self.perform_ranks.get())
+        self.controller.model.profession_rank = int(self.profession_ranks.get())
+        self.controller.model.ride_rank = int(self.ride_ranks.get())
+        self.controller.model.sense_motive_rank = int(self.sense_motive_ranks.get())
+        self.controller.model.sleight_of_hand_rank = int(self.sleight_of_hand_ranks.get())
+        self.controller.model.spellcraft_rank = int(self.spellcraft_ranks.get())
+        self.controller.model.stealth_rank = int(self.stealth_ranks.get())
+        self.controller.model.survival_rank = int(self.survival_ranks.get())
+        self.controller.model.swim_rank = int(self.swim_ranks.get())
+        self.controller.model.use_magic_device_rank = int(self.use_magic_device_ranks.get())
+        model = self.controller.calculate_skill()
+        self.pull_data(model)
+
+    def trained_skills(self):
+        model = self.controller.trained_skills(self.controller.model.character_filename)
+        self.pull_data(model)
+
+    def pull_spells(self):
+        if self.controller.model.selected_character_class is not None:
+            match self.controller.model.character_filename:
+                case "Bard":
+                    self.controller.pull_bard_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl-1])
+                case "Cleric":
+                    self.controller.pull_cleric_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case "Druid":
+                    self.controller.pull_druid_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case "Paladin":
+                    self.controller.pull_paladin_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case "Ranger":
+                    self.controller.pull_ranger_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case "Sorcerer":
+                    self.controller.pull_sorcerer_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case "Wizard":
+                    self.controller.pull_wizard_spells(self.controller.model.selected_character_class[self.controller.model.character_selected_lvl - 1])
+                case _:
+                    pass
+
+    def show_spell_list(self, spell_lvl, config):
+        selected_class = self.controller.model.character_filename
+        spell_list = self.controller.model.character_spell_list
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = Spell_List_Window(spell_lvl, config, selected_class, spell_list)
+            self.toplevel_window.attributes('-topmost', True)
+        else:
+            self.toplevel_window.destroy()
+            self.toplevel_window = Spell_List_Window(spell_lvl, config, selected_class, spell_list)
+            self.toplevel_window.attributes('-topmost', True)

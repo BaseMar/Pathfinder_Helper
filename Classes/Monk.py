@@ -11,7 +11,3 @@ class Monk:
         self.unarmed_damage = data.get('Unarmed_Damage')
         self.ac_bonus = data.get('AC_Bonus')
         self.fast_movement = data.get('Fast_Movement')
-
-    def __repr__(self):
-        return (f"Monk(id={self.id}, lvl={self.lvl}, bab={self.bab}, fort_save = {self.fort_save}, ref_save={self.ref_save}, will_save={self.will_save}, special={self.special}),"
-                f"Flurry of Blow")
