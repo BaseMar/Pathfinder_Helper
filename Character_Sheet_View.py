@@ -22,6 +22,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         super().__init__(parent)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
+        self.grid_propagate(False)
 
         # TabView
         self.tabview = customtkinter.CTkTabview(self, width=600)

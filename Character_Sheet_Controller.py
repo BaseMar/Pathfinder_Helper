@@ -302,6 +302,7 @@ class CharacterSheetController:
         self.model.spell_save_dc_4 = sum([10, 4, ability_mod])
         self.model.spells_per_day_4 = paladin.spells_per_day_4
         self.model.spell_bonus_4 = 0
+        self.view.spell_0_button.configure(state="disabled")
         self.view.spell_5_button.configure(state="disabled")
         self.view.spell_6_button.configure(state="disabled")
         self.view.spell_7_button.configure(state="disabled")
@@ -322,6 +323,7 @@ class CharacterSheetController:
         self.model.spell_save_dc_4 = sum([10, 4, ability_mod])
         self.model.spells_per_day_4 = ranger.spells_per_day_4
         self.model.spell_bonus_4 = 0
+        self.view.spell_0_button.configure(state="disabled")
         self.view.spell_5_button.configure(state="disabled")
         self.view.spell_6_button.configure(state="disabled")
         self.view.spell_7_button.configure(state="disabled")
