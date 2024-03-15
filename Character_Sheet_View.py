@@ -1,7 +1,6 @@
 import re
 import customtkinter
 from CTkListbox import *
-from PIL import Image
 from Spell_List_Window import Spell_List_Window
 
 
@@ -22,10 +21,10 @@ class CharacterSheetView(customtkinter.CTkFrame):
         super().__init__(parent)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        self.grid_propagate(False)
 
         # TabView
         self.tabview = customtkinter.CTkTabview(self, width=600)
+        self.tabview.grid_propagate(False)
         self.tabview.add("Summary")
         self.tabview.add("Combat")
         self.tabview.tab("Combat").rowconfigure(index=7, minsize=50)
@@ -33,6 +32,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.tabview.add("Spells")
         self.tabview.tab("Spells").rowconfigure(index=1, minsize=30)
         self.tabview.add("Gear")
+        self.tabview.tab("Gear").columnconfigure(index=2, minsize=90)
         self.toplevel_window = None
 
         # List of Saved Characters
@@ -82,11 +82,11 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.character_languages = customtkinter.CTkLabel(self.tabview.tab("Summary"), text="Languages: ", text_color=config["COLORS"]["TEXT"])
 
         # Combat Tab widgets
-        self.ability_score_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ability Score", text_color=config["COLORS"]["TEXT"])
-        self.ability_increase_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ability Increase", text_color=config["COLORS"]["TEXT"])
+        self.ability_score_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ab. Score", text_color=config["COLORS"]["TEXT"])
+        self.ability_increase_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ab. Increase", text_color=config["COLORS"]["TEXT"])
         self.other_modifiers_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Other Modifiers", text_color=config["COLORS"]["TEXT"])
         self.ability_sum_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ability Sum", text_color=config["COLORS"]["TEXT"])
-        self.ability_modifier_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ability Modifier", text_color=config["COLORS"]["TEXT"])
+        self.ability_modifier_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="Ability Mod.", text_color=config["COLORS"]["TEXT"])
 
         self.str_label = customtkinter.CTkLabel(self.tabview.tab("Combat"), text="STR:", text_color=config["COLORS"]["TEXT"])
         self.str_ability_score_var = customtkinter.StringVar()
@@ -161,7 +161,7 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.cha_mod = customtkinter.CTkLabel(self.tabview.tab("Combat"), textvariable=self.cha_mod_var, text_color=config["COLORS"]["TEXT"])
 
         self.character_hp_var = customtkinter.StringVar()
-        self.character_hp = customtkinter.CTkEntry(self.tabview.tab("Combat"), width=35, textvariable=self.character_hp_var)
+        self.character_hp = customtkinter.CTkEntry(self.tabview.tab("Combat"), width=20, textvariable=self.character_hp_var)
 
         self.character_initiative_var = customtkinter.StringVar()
         self.character_initiative = customtkinter.CTkLabel(self.tabview.tab("Combat"), text_color=config["COLORS"]["TEXT"], textvariable=self.character_initiative_var)
@@ -617,8 +617,56 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spell_9_button = customtkinter.CTkButton(self.tabview.tab("Spells"), text="9 lvl spells", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=lambda: self.show_spell_list(9, config))
 
         # Gear Widgets
-        item_slot_img = customtkinter.CTkImage(dark_image=Image.open("Images/ItemSlots.png"), size=(500, 630))
-        self.img_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), image=item_slot_img, text="")
+        self.head_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Head: ", text_color=config["COLORS"]["TEXT"])
+        self.headband_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Headband: ", text_color=config["COLORS"]["TEXT"])
+        self.eyes_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Eyes: ", text_color=config["COLORS"]["TEXT"])
+        self.shoulder_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Shoulders: ", text_color=config["COLORS"]["TEXT"])
+        self.neck_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Neck: ", text_color=config["COLORS"]["TEXT"])
+        self.chest_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Chest: ", text_color=config["COLORS"]["TEXT"])
+        self.body_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Body: ", text_color=config["COLORS"]["TEXT"])
+        self.armor_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Armor: ", text_color=config["COLORS"]["TEXT"])
+        self.right_hand_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Right Hand: ", text_color=config["COLORS"]["TEXT"])
+        self.left_hand_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Left Hand: ", text_color=config["COLORS"]["TEXT"])
+        self.belt_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Belt: ", text_color=config["COLORS"]["TEXT"])
+        self.wrist_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Wrist: ", text_color=config["COLORS"]["TEXT"])
+        self.hands_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Hands: ", text_color=config["COLORS"]["TEXT"])
+        self.ring_1_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="#1 Ring: ", text_color=config["COLORS"]["TEXT"])
+        self.ring_2_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="#2 Ring: ", text_color=config["COLORS"]["TEXT"])
+        self.feet_slot_label = customtkinter.CTkLabel(self.tabview.tab("Gear"), text="Feet: ", text_color=config["COLORS"]["TEXT"])
+
+        self.head_slot_var = customtkinter.StringVar()
+        self.headband_slot_var = customtkinter.StringVar()
+        self.eyes_slot_var = customtkinter.StringVar()
+        self.shoulder_slot_var = customtkinter.StringVar()
+        self.neck_slot_var = customtkinter.StringVar()
+        self.chest_slot_var = customtkinter.StringVar()
+        self.body_slot_var = customtkinter.StringVar()
+        self.armor_slot_var = customtkinter.StringVar()
+        self.right_hand_var = customtkinter.StringVar()
+        self.left_hand_var = customtkinter.StringVar()
+        self.belt_slot_var = customtkinter.StringVar()
+        self.wrist_slot_var = customtkinter.StringVar()
+        self.hands_slot_var = customtkinter.StringVar()
+        self.ring_1_slot_var = customtkinter.StringVar()
+        self.ring_2_slot_var = customtkinter.StringVar()
+        self.feet_slot_var = customtkinter.StringVar()
+
+        self.head_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.head_slot_var)
+        self.headband_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.headband_slot_var)
+        self.eyes_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.eyes_slot_var)
+        self.shoulder_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.shoulder_slot_var)
+        self.neck_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.neck_slot_var)
+        self.chest_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.chest_slot_var)
+        self.body_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.body_slot_var)
+        self.armor_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.armor_slot_var)
+        self.right_hand = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.right_hand_var)
+        self.left_hand = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.left_hand_var)
+        self.belt_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.belt_slot_var)
+        self.wrist_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.wrist_slot_var)
+        self.hands_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.hands_slot_var)
+        self.ring_1_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.ring_1_slot_var)
+        self.ring_2_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.ring_2_slot_var)
+        self.feet_slot = customtkinter.CTkComboBox(self.tabview.tab("Gear"), text_color=config["COLORS"]["TEXT"], variable=self.feet_slot_var)
 
         # Validations
         vcd = (self.tabview.tab("Summary").register(validate), '%P')
@@ -1081,7 +1129,39 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spell_bonus_9.grid(row=11, column=4, padx=10, pady=10)
         self.spell_9_button.grid(row=11, column=5, padx=10, pady=10)
 
-        self.img_label.grid(row=0, column=0)
+        self.head_slot_label.grid(row=0, column=0, padx=10, pady=10)
+        self.headband_slot_label.grid(row=1, column=0, padx=10, pady=10)
+        self.eyes_slot_label.grid(row=2, column=0, padx=10, pady=10)
+        self.shoulder_slot_label.grid(row=3, column=0, padx=10, pady=10)
+        self.neck_slot_label.grid(row=4, column=0, padx=10, pady=10)
+        self.chest_slot_label.grid(row=5, column=0, padx=10, pady=10)
+        self.body_slot_label.grid(row=6, column=0, padx=10, pady=10)
+        self.armor_slot_label.grid(row=7, column=0, padx=10, pady=10)
+        self.right_hand_label.grid(row=0, column=3, padx=10, pady=10)
+        self.left_hand_label.grid(row=1, column=3, padx=10, pady=10)
+        self.belt_slot_label.grid(row=2, column=3, padx=10, pady=10)
+        self.wrist_slot_label.grid(row=3, column=3, padx=10, pady=10)
+        self.hands_slot_label.grid(row=4, column=3, padx=10, pady=10)
+        self.ring_1_slot_label.grid(row=5, column=3, padx=10, pady=10)
+        self.ring_2_slot_label.grid(row=6, column=3, padx=10, pady=10)
+        self.feet_slot_label.grid(row=7, column=3, padx=10, pady=10)
+
+        self.head_slot.grid(row=0, column=1, padx=10, pady=10)
+        self.headband_slot.grid(row=1, column=1, padx=10, pady=10)
+        self.eyes_slot.grid(row=2, column=1, padx=10, pady=10)
+        self.shoulder_slot.grid(row=3, column=1, padx=10, pady=10)
+        self.neck_slot.grid(row=4, column=1, padx=10, pady=10)
+        self.chest_slot.grid(row=5, column=1, padx=10, pady=10)
+        self.body_slot.grid(row=6, column=1, padx=10, pady=10)
+        self.armor_slot.grid(row=7, column=1, padx=10, pady=10)
+        self.right_hand.grid(row=0, column=4, padx=10, pady=10)
+        self.left_hand.grid(row=1, column=4, padx=10, pady=10)
+        self.belt_slot.grid(row=2, column=4, padx=10, pady=10)
+        self.wrist_slot.grid(row=3, column=4, padx=10, pady=10)
+        self.hands_slot.grid(row=4, column=4, padx=10, pady=10)
+        self.ring_1_slot.grid(row=5, column=4, padx=10, pady=10)
+        self.ring_2_slot.grid(row=6, column=4, padx=10, pady=10)
+        self.feet_slot.grid(row=7, column=4, padx=10, pady=10)
 
     def push_data(self, model):
         pass

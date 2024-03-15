@@ -16,6 +16,7 @@ class MonsterView(customtkinter.CTkFrame):
 
         # TabView
         self.tabview = customtkinter.CTkTabview(self, width=650, height=670, border_width=1, border_color=config["COLORS"]["BUTTON"])
+        self.tabview.grid_propagate(False)
         self.tabview.add("Summary")
         self.tabview.add("Abilities")
         self.tabview.add("Martial")
