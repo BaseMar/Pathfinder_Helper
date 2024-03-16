@@ -6,7 +6,7 @@ from Races import Races
 from Classes import Barbarian, Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Wizard
 from Skills import Skills
 from Spells import Spells
-
+from Items import Armor_Shield, Magic_Items
 
 def check_trained_skills(setting, class_name):
     match class_name:
@@ -97,6 +97,24 @@ class CharacterSheetController:
 
         spells_object = self.data_container.load_data("Spells", Spells.Spells)
         self.model.character_spell_list = [spells_object for spells_object in spells_object]
+
+        item_object = self.data_container.load_data("armor_shield", Armor_Shield.Armor_Shield)
+        item_object_2 = self.data_container.load_data("magic_items", Magic_Items.Magic_Items)
+        self.model.gear_items = [item for sublist in [item_object, item_object_2] for item in sublist]
+        self.model.head_list = [item.name for item in self.model.gear_items if item.slot == "Head"]
+        self.model.headband_list = [item.name for item in self.model.gear_items if item.slot == "Headband"]
+        self.model.eyes_list = [item.name for item in self.model.gear_items if item.slot == "Eye"]
+        self.model.shoulders_list = [item.name for item in self.model.gear_items if item.slot == "Shoulders"]
+        self.model.neck_list = [item.name for item in self.model.gear_items if item.slot == "Neck"]
+        self.model.chest_list = [item.name for item in self.model.gear_items if item.slot == "Chest"]
+        self.model.body_list = [item.name for item in self.model.gear_items if item.slot == "Body"]
+        self.model.armor_list = [item.name for item in self.model.gear_items if item.slot == "Armor"]
+        self.model.hand_list = [item.name for item in self.model.gear_items if item.slot in ["Shield", "Weapon"]]
+        self.model.belt_list = [item.name for item in self.model.gear_items if item.slot == "Belt"]
+        self.model.wrist_list = [item.name for item in self.model.gear_items if item.slot == "Wrist"]
+        self.model.hands_list = [item.name for item in self.model.gear_items if item.slot == "Hands"]
+        self.model.ring_list = [item.name for item in self.model.gear_items if item.slot == "Ring"]
+        self.model.feet_list = [item.name for item in self.model.gear_items if item.slot == "Feet"]
 
         return self.model
 

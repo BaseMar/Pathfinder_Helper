@@ -1431,6 +1431,24 @@ class CharacterSheetView(customtkinter.CTkFrame):
         self.spells_per_day_9_var.set(value=model.spells_per_day_9)
         self.spell_bonus_9_var.set(value=model.spell_bonus_9)
 
+        # Gear Tab
+        self.head_slot.configure(values=model.head_list)
+        self.headband_slot.configure(values=model.headband_list)
+        self.eyes_slot.configure(values=model.eyes_list)
+        self.shoulder_slot.configure(values=model.shoulders_list)
+        self.neck_slot.configure(values=model.neck_list)
+        self.chest_slot.configure(values=model.chest_list)
+        self.body_slot.configure(values=model.body_list)
+        self.armor_slot.configure(values=model.armor_list)
+        self.right_hand.configure(values=model.hand_list)
+        self.left_hand.configure(values=model.hand_list)
+        self.belt_slot.configure(values=model.belt_list)
+        self.wrist_slot.configure(values=model.wrist_list)
+        self.hands_slot.configure(values=model.hands_list)
+        self.ring_1_slot.configure(values=model.ring_list)
+        self.ring_2_slot.configure(values=model.ring_list)
+        self.feet_slot.configure(values=model.feet_list)
+
     def init_data(self):
         model = self.controller.load_data_from_db()
         self.pull_data(model)

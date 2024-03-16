@@ -257,3 +257,19 @@ class CharacterSheetModel:
         self.spell_save_dc_9 = 0
         self.spells_per_day_9 = 0
         self.spell_bonus_9 = 0
+
+        self.gear_items = []
+        self.head_list = []
+        self.headband_list = []
+        self.eyes_list = []
+        self.shoulders_list = []
+        self.neck_list = []
+        self.chest_list = []
+        self.body_list = []
+        self.armor_list = []
+        self.hand_list = []
+        self.belt_list = []
+        self.wrist_list = []
+        self.hands_list = []
+        self.ring_list = []
+        self.feet_list = []
