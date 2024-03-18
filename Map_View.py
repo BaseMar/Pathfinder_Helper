@@ -30,13 +30,21 @@ class MapView(customtkinter.CTkFrame):
 
         self.add_player_button = customtkinter.CTkButton(self, text="Add Object", text_color=config["COLORS"]["TEXT"], fg_color=config["COLORS"]["BUTTON"], hover_color=config["COLORS"]["HOVER"], command=self.add_player)
 
+        self.roll_dice_combobox = customtkinter.CTkComboBox(self, command=self.roll_dice)
+        self.bonus_entry_var = customtkinter.StringVar()
+        self.bonus_entry = customtkinter.CTkEntry(self, textvariable=self.bonus_entry_var, width=50)
+        self.result_label = customtkinter.CTkLabel(self, text="Result: 0", text_color=config["COLORS"]["TEXT"])
+        self.multiply_dice_entry_var = customtkinter.StringVar()
+        self.multiply_dice_entry = customtkinter.CTkEntry(self, textvariable=self.multiply_dice_entry_var, width=50)
         self.grid_widgets()
 
-        #validations
+        # validations
         vcd = (self.register(validate), '%P')
         self.player_name.configure(validate="key", validatecommand=vcd)
         vcd_2 = (self.register(validate_2), '%P')
+        self.multiply_dice_entry.configure(validate="key", validatecommand=vcd_2)
         self.player_init.configure(validate="key", validatecommand=vcd_2)
+        self.bonus_entry.configure(validate="key", validatecommand=vcd_2)
         self.player_hp.configure(validate="key", validatecommand=vcd_2)
 
     def set_controller(self, controller):
@@ -49,9 +57,16 @@ class MapView(customtkinter.CTkFrame):
         self.player_init.grid(row=1, column=2, padx=5, pady=5)
         self.player_hp.grid(row=1, column=3, padx=5, pady=5)
         self.add_player_button.grid(row=1, column=4, padx=5, pady=5)
+        self.multiply_dice_entry.grid(row=2, column=0, padx=10, pady=10)
+        self.roll_dice_combobox.grid(row=2, column=1, padx=10, pady=10)
+        self.bonus_entry.grid(row=2, column=2, padx=10, pady=10)
+        self.result_label.grid(row=2, column=3, padx=10, pady=10)
 
     def init_data(self):
-        pass
+        self.roll_dice_combobox.configure(values=self.controller.model.dice_list)
+
+    def pull_data(self, model):
+        self.result_label.configure(text=f"Result: {model.result}")
 
     def load_map(self):
         self.controller.load_map()
@@ -69,3 +84,8 @@ class MapView(customtkinter.CTkFrame):
 
         item = f"{initiative} {name} {hp}"
         self.controller.add_player(item)
+
+    def roll_dice(self, choice):
+        multiply = self.multiply_dice_entry_var.get() or 1
+        bonus = self.bonus_entry_var.get() or 0
+        self.pull_data(self.controller.roll_dice(choice, bonus, multiply))
